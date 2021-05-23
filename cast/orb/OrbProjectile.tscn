@@ -1,0 +1,155 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://assets/pistol_shot.png" type="Texture" id=1]
+[ext_resource path="res://LifeTimer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://cast/orb/OrbProjectile.gd" type="Script" id=3]
+[ext_resource path="res://assets/circle_256.png" type="Texture" id=4]
+[ext_resource path="res://cast/orb/FX.gd" type="Script" id=5]
+[ext_resource path="res://cast/orb/OrbParticles.tres" type="Material" id=6]
+[ext_resource path="res://assets/orb_particle256.png" type="Texture" id=7]
+[ext_resource path="res://assets/circle_1024.png" type="Texture" id=8]
+
+[sub_resource type="CanvasItemMaterial" id=6]
+blend_mode = 1
+
+[sub_resource type="CanvasItemMaterial" id=5]
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.5, 1 )
+colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+width = 8
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 4.0
+
+[sub_resource type="Animation" id=4]
+resource_name = "die"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("FX:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0, 0 ) ]
+}
+
+[node name="OrbProjectile" type="Area2D"]
+pause_mode = 1
+input_pickable = false
+monitorable = false
+collision_mask = 0
+script = ExtResource( 3 )
+
+[node name="StepTimer" type="Timer" parent="."]
+process_mode = 0
+wait_time = 0.143
+autostart = true
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 4, 0 )
+scale = Vector2( 1.6, 1.6 )
+
+[node name="LifeTimer" parent="." instance=ExtResource( 2 )]
+
+[node name="Vel" type="Label" parent="."]
+margin_left = -21.0
+margin_top = -19.0
+margin_right = 19.0
+margin_bottom = -5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OnHit" type="Node" parent="."]
+
+[node name="FX" type="Node2D" parent="."]
+script = ExtResource( 5 )
+
+[node name="SpriteOld" type="Sprite" parent="FX"]
+visible = false
+self_modulate = Color( 1.4, 1.4, 1, 1 )
+texture = ExtResource( 1 )
+
+[node name="Sprite2" type="Sprite" parent="FX"]
+visible = false
+modulate = Color( 1, 1, 0, 0.615686 )
+material = SubResource( 6 )
+position = Vector2( 4, 0 )
+scale = Vector2( 0.0200915, 0.0200915 )
+texture = ExtResource( 8 )
+
+[node name="Sprite3" type="Sprite" parent="FX"]
+visible = false
+modulate = Color( 1, 1, 0, 0.439216 )
+material = SubResource( 6 )
+position = Vector2( 4, 0 )
+scale = Vector2( 0.00905689, 0.00905689 )
+texture = ExtResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="FX"]
+visible = false
+self_modulate = Color( 1, 1, 0, 1 )
+material = SubResource( 5 )
+position = Vector2( 4, -1.71363e-07 )
+scale = Vector2( 0.0344507, 0.0344507 )
+texture = ExtResource( 4 )
+
+[node name="Sprite4" type="Sprite" parent="FX"]
+material = SubResource( 5 )
+position = Vector2( 4, -1.71363e-07 )
+scale = Vector2( 0.03125, 0.03125 )
+texture = ExtResource( 4 )
+
+[node name="Particles2D" type="Particles2D" parent="FX"]
+position = Vector2( 4, 0 )
+emitting = false
+amount = 5
+lifetime = 0.5
+randomness = 1.0
+process_material = ExtResource( 6 )
+texture = ExtResource( 7 )
+
+[node name="TextureRect" type="TextureRect" parent="FX"]
+visible = false
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = -4.0
+margin_top = -4.0
+margin_right = 4.0
+margin_bottom = 4.0
+texture = SubResource( 2 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 4, 0 )
+shape = SubResource( 3 )
+
+[node name="LeftEdge" type="RayCast2D" parent="."]
+position = Vector2( 0, -4 )
+enabled = true
+cast_to = Vector2( 8, 0 )
+collide_with_areas = true
+
+[node name="RightEdge" type="RayCast2D" parent="."]
+position = Vector2( 0, 4 )
+enabled = true
+cast_to = Vector2( 8, 0 )
+collide_with_areas = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/die = SubResource( 4 )
+
+[connection signal="body_shape_entered" from="." to="." method="_on_Cast_body_shape_entered"]
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

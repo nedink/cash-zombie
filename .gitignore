@@ -1,0 +1,6 @@
+*.wav
+.import/
+*.import
+*.exe
+*.zip
+*.pck

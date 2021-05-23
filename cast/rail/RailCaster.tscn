@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/energy_shot2.wav" type="AudioStream" id=1]
+[ext_resource path="res://cast/orb/OrbCast.gd" type="Script" id=2]
+
+[node name="RailCaster" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="CastTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="CastSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 1 )

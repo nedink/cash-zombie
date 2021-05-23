@@ -1,0 +1,221 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://player/Player.gd" type="Script" id=1]
+[ext_resource path="res://cast/orb/OrbCast.tscn" type="PackedScene" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 8.0
+
+[sub_resource type="Animation" id=2]
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body/LeftArm:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Body/Legs/LeftLeg:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1, 1 ), Vector2( 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Body/Legs/RightLeg:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1, 1 ), Vector2( 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Body/RightArm:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Body/LeftArm:rotation_degrees")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = false
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.2, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, -9.89866, 5.68269 ]
+}
+
+[sub_resource type="Animation" id=3]
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body/LeftArm:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( -1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Body/Legs/LeftLeg:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1, 1 ), Vector2( 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Body/Legs/RightLeg:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1, 1 ), Vector2( 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Body/RightArm:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( -1, 1 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "walk_left"
+
+[node name="Player" type="Area2D"]
+script = ExtResource( 1 )
+energy_recover_speed = 10.0
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Legs" type="Node2D" parent="Body"]
+modulate = Color( 0.541176, 0.533333, 0.721569, 1 )
+
+[node name="LeftLeg" type="Line2D" parent="Body/Legs"]
+position = Vector2( 0, -6 )
+scale = Vector2( -1, 1 )
+points = PoolVector2Array( 4, 6, 12, 6 )
+width = 4.0
+default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+
+[node name="RightLeg" type="Line2D" parent="Body/Legs"]
+position = Vector2( 0, 6 )
+rotation = 3.14159
+scale = Vector2( -1, 1 )
+points = PoolVector2Array( -2, 0, 12, 0 )
+width = 4.0
+default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+
+[node name="LeftArm" type="Line2D" parent="Body"]
+self_modulate = Color( 0.65098, 0.752941, 0.733333, 1 )
+position = Vector2( -1.06581e-14, -10 )
+points = PoolVector2Array( -2, 0, 12, 0 )
+width = 4.0
+default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+
+[node name="RightArm" type="Line2D" parent="Body"]
+self_modulate = Color( 0.65098, 0.752941, 0.733333, 1 )
+position = Vector2( 0, 10 )
+scale = Vector2( -1, 1 )
+points = PoolVector2Array( -2, 0, 12, 0 )
+width = 4.0
+default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+
+[node name="Shoulders" type="Line2D" parent="Body"]
+visible = false
+position = Vector2( 0, -10 )
+points = PoolVector2Array( 0, -2, 0, 22 )
+width = 4.0
+default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+
+[node name="Head" type="Polygon2D" parent="Body"]
+color = Color( 0.576471, 0.980392, 0.627451, 1 )
+polygon = PoolVector2Array( -8, -8, 8, -8, 8, 8, -8, 8 )
+
+[node name="CastPoint" type="Node2D" parent="Body"]
+position = Vector2( 16, 0 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/shoot = SubResource( 2 )
+anims/walk = SubResource( 3 )
+anims/walk_left = SubResource( 5 )
+
+[node name="DashTimer" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+
+[node name="DashTween" type="Tween" parent="."]
+
+[node name="Secondary" type="Node2D" parent="."]
+
+[node name="Slots" type="Node2D" parent="."]
+
+[node name="Primary" type="Node2D" parent="Slots"]
+
+[node name="OrbCaster" parent="Slots/Primary" instance=ExtResource( 2 )]
+
+[node name="Secondary" type="Node2D" parent="Slots"]
+
+[node name="Ultimate" type="Node2D" parent="Slots"]
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="ViewportContainer" type="ViewportContainer" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Viewport" type="Viewport" parent="UI/ViewportContainer"]
+size = Vector2( 256, 256 )
+usage = 0
+
+[node name="Camera2D" type="Camera2D" parent="UI/ViewportContainer/Viewport"]
+current = true
+
+[connection signal="tween_completed" from="DashTween" to="." method="_on_DashTween_tween_completed"]

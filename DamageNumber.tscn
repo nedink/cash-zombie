@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://DamageNumber.gd" type="Script" id=1]
+[ext_resource path="res://LifeTimer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/square_font.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/new_dynamicfont.tres" type="DynamicFont" id=4]
+
+[node name="DamageNumber" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="LifeTimer" parent="." instance=ExtResource( 2 )]
+
+[node name="Label" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -128.0
+margin_top = -64.0
+margin_right = 128.0
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "23452123452345"
+align = 1
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Label"]
+
+[node name="Label2" type="Label" parent="."]
+margin_right = 320.0
+margin_bottom = 176.0
+custom_fonts/font = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
