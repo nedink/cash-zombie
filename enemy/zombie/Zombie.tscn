@@ -1,0 +1,118 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://enemy/zombie/Zombie.gd" type="Script" id=2]
+[ext_resource path="res://NoRotate.gd" type="Script" id=3]
+[ext_resource path="res://assets/bar.png" type="Texture" id=4]
+[ext_resource path="res://ui/HideTimer.gd" type="Script" id=5]
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 7.0
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 10.0499
+
+[sub_resource type="Animation" id=3]
+resource_name = "attack"
+length = 0.5
+
+[sub_resource type="Animation" id=6]
+resource_name = "hit"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Body:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 2, 2, 2, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Zombie" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 3
+can_sleep = false
+linear_damp = 4.0
+script = ExtResource( 2 )
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Arms" type="Node2D" parent="Body"]
+
+[node name="LeftArm" type="Line2D" parent="Body/Arms"]
+position = Vector2( -1, -10 )
+points = PoolVector2Array( 0, 0, 13, 0 )
+width = 4.0
+default_color = Color( 0.45098, 0.266667, 0.423529, 1 )
+joint_mode = 2
+
+[node name="RightArm" type="Line2D" parent="Body/Arms"]
+position = Vector2( -1, 10 )
+points = PoolVector2Array( 0, 0, 13, 0 )
+width = 4.0
+default_color = Color( 0.45098, 0.266667, 0.423529, 1 )
+
+[node name="Head" type="Polygon2D" parent="Body"]
+color = Color( 0.929412, 0.305882, 0.423529, 1 )
+polygon = PoolVector2Array( -8, -8, 8, -8, 8, 8, -8, 8 )
+
+[node name="AttackArea" type="Area2D" parent="Body"]
+position = Vector2( 6, 0 )
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/AttackArea"]
+position = Vector2( 2, 0 )
+shape = SubResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 5 )
+
+[node name="States" type="Node" parent="."]
+
+[node name="IDLE" type="Node" parent="States"]
+
+[node name="Timer" type="Timer" parent="States/IDLE"]
+
+[node name="UI" type="Node2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="Health" type="TextureProgress" parent="UI"]
+visible = false
+self_modulate = Color( 1.5, 1.5, 1.5, 1 )
+margin_left = -32.0
+margin_top = -37.0
+margin_right = 224.0
+margin_bottom = -21.0
+rect_scale = Vector2( 0.249958, 0.501531 )
+max_value = 1.0
+step = 0.001
+value = 1.0
+texture_progress = ExtResource( 4 )
+fill_mode = 6
+tint_progress = Color( 0.823529, 0.231373, 0.411765, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HideTimer" type="Timer" parent="UI/Health"]
+one_shot = true
+script = ExtResource( 5 )
+
+[node name="Line2D" type="Line2D" parent="UI"]
+visible = false
+position = Vector2( 96, 139 )
+points = PoolVector2Array( -130, -178, -62, -178, -62, -166, -130, -166, -130, -178 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/attack = SubResource( 3 )
+anims/hit = SubResource( 6 )
+
+[connection signal="timeout" from="UI/Health/HideTimer" to="UI/Health/HideTimer" method="_on_HideTimer_timeout"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

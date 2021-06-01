@@ -1,0 +1,61 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://ui/value_bar/PreCharge.gd" type="Script" id=1]
+[ext_resource path="res://ui/value_bar/Value.gd" type="Script" id=2]
+[ext_resource path="res://ui/value_bar/ValueBar.gd" type="Script" id=3]
+[ext_resource path="res://ui/value_bar/Delay.gd" type="Script" id=4]
+[ext_resource path="res://assets/bar.png" type="Texture" id=5]
+
+[node name="ValueBar" type="Control"]
+process_priority = 1
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Delay" type="TextureProgress" parent="."]
+margin_right = 256.0
+margin_bottom = 16.0
+step = 0.0
+value = 100.0
+texture_progress = ExtResource( 5 )
+tint_progress = Color( 1, 1, 1, 0.215686 )
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Tween" type="Tween" parent="Delay"]
+
+[node name="DelayTimer" type="Timer" parent="Delay"]
+wait_time = 0.001
+one_shot = true
+autostart = true
+
+[node name="Precharge" type="TextureProgress" parent="."]
+visible = false
+margin_right = 256.0
+margin_bottom = 16.0
+step = 0.0
+texture_progress = ExtResource( 5 )
+tint_progress = Color( 0.529412, 0.494118, 0.294118, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Postcharge" type="TextureProgress" parent="."]
+margin_right = 256.0
+margin_bottom = 16.0
+step = 0.0
+value = 50.0
+texture_progress = ExtResource( 5 )
+tint_progress = Color( 1, 1, 1, 0.784314 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Postcharge"]

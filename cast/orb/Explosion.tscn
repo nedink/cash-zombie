@@ -13,7 +13,7 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 4.0
+radius = 8.0
 
 [node name="Explosion" type="Area2D"]
 pause_mode = 1

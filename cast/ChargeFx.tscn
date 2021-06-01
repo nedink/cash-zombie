@@ -68,10 +68,24 @@ lifetime = 0.7
 speed_scale = 4.0
 process_material = SubResource( 5 )
 
-[node name="Sprite" type="Sprite" parent="."]
-self_modulate = Color( 1.4, 1.4, 1, 1 )
+[node name="Circle" type="Sprite" parent="."]
+visible = false
+self_modulate = Color( 1.5, 1.5, 1.5, 1 )
 scale = Vector2( 0.033, 0.033 )
 texture = ExtResource( 2 )
+
+[node name="Sprite" type="Node2D" parent="."]
+self_modulate = Color( 1.5, 1.5, 1.5, 1 )
+scale = Vector2( 0.033, 0.033 )
+
+[node name="ColorRect" type="ColorRect" parent="Sprite"]
+margin_left = -121.0
+margin_top = -121.0
+margin_right = 121.0
+margin_bottom = 121.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/charging = SubResource( 6 )

@@ -1,10 +1,10 @@
-extends Node
+extends Node2D
 
 
-class_name CastState
+class_name Cast
 
 
-enum {
+enum State {
 	IDLE,
 	CHARGING,
 #	MAX_CHARGE,

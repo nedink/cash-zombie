@@ -9,17 +9,17 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node2D",
+"class": "Cast",
+"language": "GDScript",
+"path": "res://cast/Cast.gd"
+}, {
 "base": "Area2D",
 "class": "CastProjectile",
 "language": "GDScript",
 "path": "res://cast/orb/OrbProjectile.gd"
 }, {
-"base": "Node",
-"class": "CastState",
-"language": "GDScript",
-"path": "res://CastState.gd"
-}, {
-"base": "PrimaryCast",
+"base": "Cast",
 "class": "OrbCast",
 "language": "GDScript",
 "path": "res://cast/orb/OrbCast.gd"
@@ -29,22 +29,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://cast/ParticleCaster.gd"
 }, {
-"base": "Node2D",
-"class": "PrimaryCast",
-"language": "GDScript",
-"path": "res://cast/PrimaryCast.gd"
-}, {
 "base": "Node",
 "class": "Utils",
 "language": "GDScript",
 "path": "res://Utils.gd"
 } ]
 _global_script_class_icons={
+"Cast": "",
 "CastProjectile": "",
-"CastState": "",
 "OrbCast": "",
 "ParticleCaster": "",
-"PrimaryCast": "",
 "Utils": ""
 }
 
@@ -160,8 +154,8 @@ dash={
 2d_physics/layer_1="player"
 2d_physics/layer_2="enemy"
 2d_physics/layer_3="wall"
-2d_physics/layer_11="player_cast"
-2d_physics/layer_12="enemy_cast"
+2d_physics/layer_11="player cast"
+2d_physics/layer_12="enemy cast"
 
 [physics]
 
@@ -171,4 +165,5 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+environment/default_clear_color=Color( 0.0862745, 0.0784314, 0.129412, 1 )
 environment/default_environment="res://default_env.tres"

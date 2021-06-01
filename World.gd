@@ -7,6 +7,14 @@ extends Node2D
 
 
 
+func _ready():
+	for x in range(-8, 8):
+		for y in range(-8, 8):
+#			if Vector2(x, y).length() <= 6:
+#				$TileMap.set_cell(x, y, rand_range(0, 16))
+			$TileMap.set_cell(x, y, rand_range(0, 16))
+
+
 func _input(event):
 	if event.is_action("ui_cancel"):
 		get_tree().quit()

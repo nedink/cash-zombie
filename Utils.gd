@@ -16,3 +16,6 @@ static func sum(list: Array):
 
 static func avg(list: Array):
 	return sum(list) / (len(list) if list else 0)
+
+
+

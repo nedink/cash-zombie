@@ -8,11 +8,12 @@ var explosion_scene = preload("res://cast/ExplosionFX.tscn")
 
 #var caster: OrbCast
 
+var vel:Vector2 = Vector2.ZERO
 var vel_step:Vector2 = Vector2.ZERO
 var pos_step:Vector2 = Vector2.ZERO
-var vel:Vector2 = Vector2.ZERO
 var damping = 1.0
 var damage = 1.0
+var mass = 0.0
 var knockback = 0.0
 var size = 1
 
@@ -33,7 +34,12 @@ func _process(delta):
 	if not dead:
 		scale = Vector2.ONE * size
 		$FX.scale.x = max(1, vel_step.length() / 8)
-		$FX.scale.y = 1/$FX.scale.x if $FX.scale.x != 0 else 0 
+		$FX.scale.y = min(1, 1/$FX.scale.x)
+#		var modul = rand_range(0, 0.3)
+#		$FX.modulate.r = 1 + modul
+#		$FX.modulate.g = 1 + modul
+#		$FX.modulate.b = 1 + modul
+		
 
 
 func _physics_process(delta):
@@ -94,10 +100,6 @@ func _on_Cast_body_shape_entered(body_id: int, body: PhysicsBody2D, body_shape: 
 #									body_shape_2d,
 #									body_global_transform)
 	
-	# just get the endpoint of the projectile
-#	if collision_points:
-#		print(collision_points)
-#	print(collision_points)
 #	var hit_point = Utils.avg(collision_points)
 #	var hit_point = collision_points[len(collision_points) - 1] if collision_points else global_position
 	var hit_point = $CollisionShape2D.global_position
