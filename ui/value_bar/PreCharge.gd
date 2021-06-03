@@ -5,7 +5,7 @@ extends TextureProgress
 
 var values = []
 
-onready var player = $"/root/World/Player"
+onready var player = $"/root/World/YSort/Player"
 
 
 

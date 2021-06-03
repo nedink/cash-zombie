@@ -28,7 +28,7 @@ export var charge_speed = 5.0
 # payload
 export var velocity = 800
 export var damping = 2.0
-export var damage = 5
+export var damage = 4
 export var size = 1.0
 #export var impact_force= 10
 export var life_time = 1.0
@@ -79,6 +79,7 @@ func cast():
 	var projectile = projectile_scene.instance()
 #	projectile.caster = self
 #	projectile.payload = payload
+	projectile.life_time = life_time
 	$"/root/World".add_child(projectile)
 	projectile.global_transform = caster.get_node("Body/CastPoint").global_transform
 	# give additional velocity in the direction of movement

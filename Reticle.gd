@@ -1,7 +1,7 @@
 extends Node2D
 
 
-#onready var player = $"/root/World/Player"
+#onready var player = $"/root/World/YSort/Player"
 
 
 #func _ready():

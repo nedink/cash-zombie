@@ -4,7 +4,7 @@
 [ext_resource path="res://cast/orb/OrbCast.tscn" type="PackedScene" id=2]
 [ext_resource path="res://cast/ChargeFx.tscn" type="PackedScene" id=3]
 
-[sub_resource type="CircleShape2D" id=5]
+[sub_resource type="CircleShape2D" id=1]
 radius = 8.0
 
 [sub_resource type="Animation" id=2]
@@ -124,7 +124,9 @@ tracks/3/keys = {
 [sub_resource type="Animation" id=4]
 resource_name = "walk_left"
 
-[node name="Player" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D" groups=[
+"player",
+]]
 collision_mask = 2050
 script = ExtResource( 1 )
 speed = 250
@@ -132,14 +134,14 @@ speed = 250
 [node name="Body" type="Node2D" parent="."]
 
 [node name="Legs" type="Node2D" parent="Body"]
-modulate = Color( 0.541176, 0.533333, 0.721569, 1 )
+modulate = Color( 0, 1, 0.741176, 1 )
 
 [node name="LeftLeg" type="Line2D" parent="Body/Legs"]
 position = Vector2( 0, -12 )
 scale = Vector2( -1, 1 )
 points = PoolVector2Array( 4, 6, 12, 6 )
 width = 4.0
-default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+default_color = Color( 1, 1, 1, 1 )
 
 [node name="RightLeg" type="Line2D" parent="Body/Legs"]
 position = Vector2( 0, 6 )
@@ -147,7 +149,7 @@ rotation = 3.14159
 scale = Vector2( -1, 1 )
 points = PoolVector2Array( -2, 0, 12, 0 )
 width = 4.0
-default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+default_color = Color( 1, 1, 1, 1 )
 
 [node name="LeftArm" type="Line2D" parent="Body"]
 visible = false
@@ -155,7 +157,7 @@ self_modulate = Color( 0.65098, 0.752941, 0.733333, 1 )
 position = Vector2( -1.06581e-14, -10 )
 points = PoolVector2Array( -2, 0, 12, 0 )
 width = 4.0
-default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+default_color = Color( 1, 1, 1, 1 )
 
 [node name="RightArm" type="Line2D" parent="Body"]
 visible = false
@@ -163,17 +165,17 @@ self_modulate = Color( 0.65098, 0.752941, 0.733333, 1 )
 position = Vector2( 0, 10 )
 points = PoolVector2Array( -2, 0, 12, 0 )
 width = 4.0
-default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+default_color = Color( 1, 1, 1, 1 )
 
 [node name="Shoulders" type="Line2D" parent="Body"]
 visible = false
 position = Vector2( 0, -10 )
 points = PoolVector2Array( 0, -2, 0, 22 )
 width = 4.0
-default_color = Color( 0.576471, 0.980392, 0.627451, 1 )
+default_color = Color( 1, 1, 1, 1 )
 
 [node name="Head" type="Polygon2D" parent="Body"]
-color = Color( 0.576471, 0.980392, 0.627451, 1 )
+color = Color( 0, 1, 0.741176, 1 )
 polygon = PoolVector2Array( -8, -8, 8, -8, 8, 8, -8, 8 )
 
 [node name="CastPoint" type="Node2D" parent="Body"]
@@ -183,7 +185,7 @@ position = Vector2( 16, 0 )
 position = Vector2( 16, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 5 )
+shape = SubResource( 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/shoot = SubResource( 2 )
@@ -203,8 +205,7 @@ one_shot = true
 [node name="Primary" type="Node2D" parent="Slots"]
 
 [node name="OrbCast" parent="Slots/Primary" instance=ExtResource( 2 )]
-charge_speed = 10.0
-mass = 1.0
+damping = 3.0
 
 [node name="Secondary" type="Node2D" parent="Slots"]
 
@@ -212,4 +213,5 @@ mass = 1.0
 
 [node name="UI" type="Node2D" parent="."]
 
+[connection signal="timeout" from="DashTimer" to="." method="_on_DashTimer_timeout"]
 [connection signal="tween_completed" from="DashTween" to="." method="_on_DashTween_tween_completed"]

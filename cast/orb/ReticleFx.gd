@@ -2,7 +2,7 @@ extends Node2D
 
 var width = 45
 
-onready var player = $"/root/World/Player"
+onready var player = $"/root/World/YSort/Player"
 
 
 func _draw():

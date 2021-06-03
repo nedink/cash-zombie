@@ -9,5 +9,6 @@ enum State {
 	CHARGING,
 #	MAX_CHARGE,
 	FIRING,
+	AWAIT_UNACTION,
 #	JUST_FIRED,
 }

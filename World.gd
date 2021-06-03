@@ -1,6 +1,9 @@
 extends Node2D
 
 
+onready var player = get_tree().get_nodes_in_group("player")[0]
+
+
 
 #func _ready():
 #	$UI/Energy.value = 100
@@ -13,6 +16,9 @@ func _ready():
 #			if Vector2(x, y).length() <= 6:
 #				$TileMap.set_cell(x, y, rand_range(0, 16))
 			$TileMap.set_cell(x, y, rand_range(0, 16))
+#	slow_mo()
+#	Engine.time_scale = .5
+	
 
 
 func _input(event):
@@ -25,7 +31,14 @@ func _input(event):
 
 
 func _process(delta):
-	
 	$UI/Fps.text = str(Engine.get_frames_per_second())
 	$UI/Nodes.text = str(get_tree().get_node_count())
 	$UI/MousePosition.text = str(get_global_mouse_position())
+
+
+
+
+
+#func slow_mo(4: float):
+#	$TimeScaleTween.interpolate_property(Engine, "time_scale", 0.5, 1.0, 2, Tween.TRANS_CUBIC, Tween.EASE_IN)
+#	$TimeScaleTween.interpolate_property()

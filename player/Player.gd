@@ -13,6 +13,7 @@ export var damping = 0.1
 var pos_step = Vector2.ZERO
 var joypad_controls = false
 var dashing = false
+var dash_direction = Vector2.RIGHT
 var cast_state = Cast.State.IDLE
 
 onready var charge_value = 0
@@ -85,9 +86,15 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("dash") and $DashTimer.is_stopped():
 		dashing = true
 		$CollisionShape2D.set_deferred("disabled", true)
-		$DashTween.interpolate_property(self, "position", position, position + (dash_len * input_step.normalized()), dash_time, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+		var direction = dash_direction
+		if input_step.normalized().length():
+			direction = input_step.normalized()
+		dash_direction = direction
+		$DashTween.interpolate_property(self, "position", position, position + (dash_len * direction), dash_time, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 		$DashTween.start()
 		$DashTimer.start()
+		
+#		dash_len = input_step.normalized()
 	
 #	input_step *= speed * delta
 	input_step *= speed
@@ -140,10 +147,12 @@ func process_cast_state(delta):
 		return
 	if cast_state == Cast.State.CHARGING:
 #		if automatic and charge_value >= charge_required:
-		if int(charge_value):
+		if charge_value >= 1.0:
 			release()
-			cast_state = Cast.State.IDLE
-#			release()
+			if current_cast().automatic:
+				cast_state = Cast.State.IDLE
+			else:
+				cast_state = Cast.State.AWAIT_UNACTION
 			return
 #		if not Input.is_action_pressed("primary_cast"):
 #			if charge_value >= current_cast().charge_required:
@@ -161,6 +170,10 @@ func process_cast_state(delta):
 			else:
 				charge(delta)
 				pass
+		return
+	if cast_state == Cast.State.AWAIT_UNACTION:
+		if not Input.is_action_pressed("primary_cast"):
+			cast_state = Cast.State.IDLE
 		return
 	if cast_state == Cast.State.FIRING:
 #		release()
@@ -187,6 +200,7 @@ func charge(delta):
 	charge_value += current_charge_speed() * delta
 #	charge_value = min(charge_value, current_cast().charge_required)
 	$Body/ChargeFx.charging(charge_value)
+#	energy_value -= charge_value * current_cast().energy_drain 
 #	if charge_value < charge_max:
 #		$ChargeFx.charging(charge_value)
 #	else:
@@ -203,7 +217,7 @@ func release():
 	current_cast().call_deferred("cast")
 	charge_value = 0
 	$Body/ChargeFx.release()
-	$HalfMouse/Camera2D.add_trauma(0.2)
+	$HalfMouse/Camera2D.raise_trauma(0.1)
 #	Input.mouse_offseta
 	
 #	current_cast().get_node("CooldownTimer").start(current_cast().cast_cooldown if current_cast().cast_cooldown > 0 else 0.01)
@@ -211,7 +225,7 @@ func release():
 
 func hit(cast:CastProjectile, contact_point:Vector2):
 	health_value -= cast.damage
-	print(health_value)
+#	print(health_value)
 	
 	var impulse_vec:Vector2 = cast.pos_step + (cast.pos_step.normalized() * cast.knockback)
 	var impulse_pos = to_local(contact_point).rotated(rotation)
@@ -237,3 +251,11 @@ func _input(event):
 
 func _on_DashTween_tween_completed(object, key):
 	dashing = false
+
+
+func energy_value_post_charge():
+	return energy_value - charge_value * current_cast().energy_drain
+
+
+func _on_DashTimer_timeout():
+	$CollisionShape2D.set_deferred("disabled", false)

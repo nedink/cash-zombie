@@ -15,8 +15,8 @@ var damping = 1.0
 var damage = 1.0
 var mass = 0.0
 var knockback = 0.0
-var size = 1
-
+var size = 1.0
+var life_time = 1.0
 
 var collided_once = false
 
@@ -26,7 +26,11 @@ onready var shape:CircleShape2D = $CollisionShape2D.shape
 
 
 func _ready():
+	$LifeTimer.wait_time = life_time
 	$CollisionShape2D.position.x = shape.radius
+	
+	$LifeTimer.start()
+#	print($LifeTimer.wait_time)
 
 
 
@@ -67,9 +71,9 @@ func do_collision(raycast:RayCast2D) -> Vector2:
 	if raycast.is_colliding():
 		collided_once = true
 		var collider = raycast.get_collider()
-		var point = global_position + (raycast.get_collision_point() - raycast.global_position)
-		on_hit(collider, point)
-		return point
+		var my_position = global_position + (raycast.get_collision_point() - raycast.global_position)
+		on_hit(collider, my_position)
+		return my_position
 	return Vector2.ZERO
 
 
@@ -102,11 +106,11 @@ func _on_Cast_body_shape_entered(body_id: int, body: PhysicsBody2D, body_shape: 
 	
 #	var hit_point = Utils.avg(collision_points)
 #	var hit_point = collision_points[len(collision_points) - 1] if collision_points else global_position
-	var hit_point = $CollisionShape2D.global_position
+#	var explode_point = global_position
 #	if collision_points:
 #		hit_point = collision_points[0]
 	
-	on_hit(body, hit_point)
+	on_hit(body, global_position)
 	
 	
 
@@ -120,7 +124,6 @@ func on_hit(body, point):
 		body.hit(self, point)
 		
 		queue_free()
-	pass
 
 
 
@@ -134,14 +137,10 @@ func explode(where: Vector2):
 
 
 func destroy():
-	die()
-
-
-func die():
 	dead = true
 	set_process(false)
 	$AnimationPlayer.play("die")
-	
+
 
 
 
