@@ -45,9 +45,9 @@ func shake():
 	offset = pos
 	
 	var sh : ShaderMaterial = chrome_vig.material
-	sh.set_shader_param("light", min(pos.length() * 0.1, 0.8))
+#	sh.set_shader_param("light", min(pos.length() * 0.1, 0.7))
 #	sh.set_shader_param("extend", 0.5 + offset.length() * 0.1)
-	sh.set_shader_param("offset", pos.length() * 2)
+	sh.set_shader_param("offset", pos * 2)
 	
 	
 #	Engine.time_scale = clamp((1 / pos.length() * $SloMo.coefficients) if $SloMo.coefficient > 0 else 1, 0, 1)

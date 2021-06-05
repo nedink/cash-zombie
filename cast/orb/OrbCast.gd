@@ -19,11 +19,13 @@ export var energy_drain = 2
 #export var charge_required = 1.0
 #export var charge_min = 1.0
 #export var charge_max = 1.0
+export var chargeable = true
 export var charge_speed = 5.0
 #export var charge_initial = 0.0
 
 #export var charge_damage = 2
 #export var charge_velocity = 2
+
 
 # payload
 export var velocity = 800
@@ -75,7 +77,7 @@ func pos_step():
 
 
 #func emit_projectile():
-func cast():
+func cast(charge_value: float):
 	var projectile = projectile_scene.instance()
 #	projectile.caster = self
 #	projectile.payload = payload
@@ -101,4 +103,6 @@ func cast():
 	projectile.rotation += deg2rad(rand_range(-spread_degrees/2, spread_degrees/2))
 	
 	$CooldownTimer.start(cast_cooldown if cast_cooldown > 0 else 0.01)
+	
+	$CastSound.play()
 	

@@ -205,7 +205,9 @@ one_shot = true
 [node name="Primary" type="Node2D" parent="Slots"]
 
 [node name="OrbCast" parent="Slots/Primary" instance=ExtResource( 2 )]
+chargeable = false
 damping = 3.0
+damage = 3
 
 [node name="Secondary" type="Node2D" parent="Slots"]
 

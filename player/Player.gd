@@ -15,6 +15,7 @@ var joypad_controls = false
 var dashing = false
 var dash_direction = Vector2.RIGHT
 var cast_state = Cast.State.IDLE
+#var mouse_down = true
 
 onready var charge_value = 0
 onready var energy_value = energy_max
@@ -131,16 +132,26 @@ func _integrate_forces(state):
 
 
 func process_cast_state(delta):
+	# reticle
 	if cast_state == Cast.State.CHARGING:
 		current_cast().reticle.set_state(cast_state, charge_value)
 	else:
 		current_cast().reticle.set_state(cast_state)
 	
 	if cast_state == Cast.State.IDLE:
-		if Input.is_action_pressed("primary_cast") and energy_value >= current_cast().energy_drain and current_cast().get_node("CooldownTimer").is_stopped():
-			cast_state = Cast.State.CHARGING
-#			charge_value += charge_initial
-			process_cast_state(delta)
+		var should_cast = Input.is_action_pressed("primary_cast") if current_cast().automatic else Input.is_action_just_pressed("primary_cast")
+		should_cast = should_cast and energy_value >= current_cast().energy_drain and current_cast().get_node("CooldownTimer").is_stopped()
+		
+		if should_cast:
+			if current_cast().chargeable:
+				cast_state = Cast.State.CHARGING
+				process_cast_state(delta)
+			else:
+				release()
+#				if current_cast().automatic:
+#					cast_state = Cast.State.IDLE
+#				else:
+#					cast_state = Cast.State.AWAIT_UNACTION
 			return
 		energy_value += energy_recover_speed * delta
 		energy_value = min(energy_value, energy_max)
@@ -149,10 +160,12 @@ func process_cast_state(delta):
 #		if automatic and charge_value >= charge_required:
 		if charge_value >= 1.0:
 			release()
-			if current_cast().automatic:
-				cast_state = Cast.State.IDLE
-			else:
-				cast_state = Cast.State.AWAIT_UNACTION
+#			if current_cast().automatic
+#			cast_ready = current_cast().automatic
+#			if current_cast().automatic:
+#				cast_state = Cast.State.IDLE
+#			else:
+#				cast_state = Cast.State.AWAIT_UNACTION
 			return
 #		if not Input.is_action_pressed("primary_cast"):
 #			if charge_value >= current_cast().charge_required:
@@ -214,11 +227,11 @@ func cancel_charge():
 func release():
 	energy_value -= current_cast().energy_drain
 	energy_value = max(energy_value, 0)
-	current_cast().call_deferred("cast")
+	current_cast().call_deferred("cast", charge_value)
 	charge_value = 0
 	$Body/ChargeFx.release()
 	$HalfMouse/Camera2D.raise_trauma(0.1)
-#	Input.mouse_offseta
+	
 	
 #	current_cast().get_node("CooldownTimer").start(current_cast().cast_cooldown if current_cast().cast_cooldown > 0 else 0.01)
 

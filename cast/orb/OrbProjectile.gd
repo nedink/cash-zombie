@@ -72,7 +72,7 @@ func do_collision(raycast:RayCast2D) -> Vector2:
 		collided_once = true
 		var collider = raycast.get_collider()
 		var my_position = global_position + (raycast.get_collision_point() - raycast.global_position)
-		on_hit(collider, my_position)
+		on_hit(collider)
 		return my_position
 	return Vector2.ZERO
 
@@ -110,30 +110,30 @@ func _on_Cast_body_shape_entered(body_id: int, body: PhysicsBody2D, body_shape: 
 #	if collision_points:
 #		hit_point = collision_points[0]
 	
-	on_hit(body, global_position)
+	on_hit(body)
 	
 	
 
 
-func on_hit(body, point):
+func on_hit(body):
 #	$FX.hide()
 #	update()
 	if body.has_method("hit"):
-		call_deferred("explode", point)
+		call_deferred("explode")
 		
-		body.hit(self, point)
+		body.hit(self, global_position)
 		
 		queue_free()
 
 
 
-func explode(where: Vector2):
-		var explosion:Node2D = explosion_scene.instance()
-		$"/root/World".add_child(explosion)
-#		explosion.global_transform = global_transform
-		explosion.scale = scale
-		explosion.global_position = where
-#		explosion.global_rotation = global_rotation
+func explode():
+	var explosion:Node2D = explosion_scene.instance()
+	$"/root/World".add_child(explosion)
+	explosion.global_transform = global_transform
+#	explosion.global_position = global_position
+	explosion.scale = scale
+	pass
 
 
 func destroy():

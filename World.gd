@@ -39,6 +39,10 @@ func _process(delta):
 
 
 
-#func slow_mo(4: float):
-#	$TimeScaleTween.interpolate_property(Engine, "time_scale", 0.5, 1.0, 2, Tween.TRANS_CUBIC, Tween.EASE_IN)
-#	$TimeScaleTween.interpolate_property()
+func slow_mo(time: float, in_time: float, out_time: float):
+	$TimeScaleTween.interpolate_property(Engine, "time_scale", 0.5, 1.0, 2, Tween.TRANS_CUBIC, Tween.EASE_IN)
+	$TimeScaleTween.start()
+	yield($TimeScaleTween, "")
+	
+	
+
