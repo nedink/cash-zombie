@@ -130,6 +130,9 @@ resource_name = "walk_left"
 collision_mask = 2050
 script = ExtResource( 1 )
 speed = 250
+energy_recover_speed = 50.0
+dash_len = 200
+dash_time = 0.2
 
 [node name="Body" type="Node2D" parent="."]
 
@@ -184,6 +187,8 @@ position = Vector2( 16, 0 )
 [node name="ChargeFx" parent="Body" instance=ExtResource( 3 )]
 position = Vector2( 16, 0 )
 
+[node name="Trail" type="Line2D" parent="Body"]
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
@@ -205,7 +210,9 @@ one_shot = true
 [node name="Primary" type="Node2D" parent="Slots"]
 
 [node name="OrbCast" parent="Slots/Primary" instance=ExtResource( 2 )]
+cast_cooldown = 0.1
 chargeable = false
+velocity = 1200
 damping = 3.0
 damage = 3
 

@@ -12,6 +12,9 @@ export var separation = 1.0
 export var cohesion = 1.0
 export var alignment = 1.0
 
+onready var camera_trauma = $"/root/World/YSort/Player/HalfMouse/Camera2D/Trauma"
+
+
 export var can_flock = false
 
 
@@ -41,7 +44,7 @@ func pid(current_error: Vector2, dt: float) -> Vector2:
 	
 	return P*Kp + I*Ki + D*Kd;
 
-var splat_scene = preload("res://enemy/zombie/Splat.tscn").instance()
+export var splat_scene: PackedScene
 
 onready var health_max = 10 * size
 onready var health_value = health_max
@@ -102,6 +105,7 @@ func hit(cast:CastProjectile, contact_point:Vector2):
 	var impulse_pos = to_local(contact_point).rotated(rotation)
 	apply_impulse(impulse_pos, impulse_vec)
 	
+	
 #	$UI/Health/Health.min_value = 0
 #	$UI/Health/Health.max_value = health_max
 #	$UI/Health/Health.value = health_value
@@ -109,11 +113,17 @@ func hit(cast:CastProjectile, contact_point:Vector2):
 	
 #	$AnimationPlayer.seek(0)
 #	$AnimationPlayer.play("hit", -1)
-	$"/root/World/YSort/Player/HalfMouse/Camera2D".raise_trauma(0.2)
+	camera_trauma.raise_trauma(0.2)
+	
 	
 	if health_value <= 0.0:
+		var splat_direction = (global_position - cast.global_position).angle()
+		call_deferred("splat", splat_direction)
+	
+	if health_value <= 0.0:
+#		splat_direction = (global_position - cast.global_position).angle()
 		call_deferred("destroy")
-		$"/root/World/YSort/Player/HalfMouse/Camera2D".raise_trauma(0.2)
+		(camera_trauma).raise_trauma(0.2)
 		
 #	var dmg_num = dmg_num_scene.instance()
 #	dmg_num.value = cast.damage
@@ -127,20 +137,28 @@ func hit(cast:CastProjectile, contact_point:Vector2):
 #func get_splat_scene
 
 
-func destroy():
-	var splat = splat_scene.duplicate()
+
+func splat(direction: float):
+	var splat = splat_scene.instance()
 	
 	$"/root/World".add_child(splat)
 	splat.global_transform = $Body.global_transform
-	splat.rotate(PI)
-#	splat.global_transform = global_transform
-#	splat.rotate(PI)
+#	if splat_direction:
+#		splat.global_rotation = splat_direction
+	splat.global_rotation = direction
+
+
+
+func destroy():
+	
+#	$RandomAudioStreamPlayer2D.play()
+#	yield($RandomAudioStreamPlayer2D, "finished")
+	
 	queue_free()
-	pass
 
 
 
-#var noise = OpenSimplexNoise.new()
+var noise = OpenSimplexNoise.new()
 
 # Configure
 #noise.seed = randi()
@@ -182,7 +200,7 @@ func flocking(delta):
 	coh_vec = coh_vec.normalized()
 	# coef applied
 	coh_vec *= cohesion
-#	flock_vec += coh_vec
+	flock_vec += coh_vec
 	
 #	# alignment - directions, summed, averaged, normalized
 #	var ali_vec = Vector2.ZERO
@@ -195,45 +213,70 @@ func flocking(delta):
 #	ali_vec = ali_vec.normalized()
 #	ali_vec *= alignment
 #	flock_vec += ali_vec
+	
+	
 	flock_vec *= delta
 	return flock_vec
 	
+
+
+
+#var noise_step = Vector2.RIGHT
+var noise_step = 0.0
+
 
 func _integrate_forces(state):
 	
 	var vec = Vector2.ZERO
 	
+	var prev_direction = state.linear_velocity.normalized() if state.linear_velocity else Vector2.RIGHT
+	
+	# random 
+	vec += prev_direction.rotated(deg2rad(rand_range(-45, 45)))
+	
+	# noise, cycling
+#	vec += prev_direction.rotated((noise.get_noise_2dv(noise_step)) * PI)
+#	noise_step = noise_step.rotated(state.step * TAU)
+	var noise_value = noise.get_noise_1d(noise_step)
+	vec += prev_direction.rotated(noise_value * PI) 
+	noise_step += state.step
+#	if $RayCast2D.has_method(cast_to)
+	$RayCast2D.cast_to = vec * 100
+	$RayCast2D.global_rotation = 0
+	
 	# to player
-	vec += (player.global_position - global_position).normalized()
+	vec += (player.global_position - global_position).normalized() * speed * state.step
+	
+	# straight on
+#	vec += state.linear_velocity.normalized() * speed * state.step
 	
 	
-	# FLOCKING 
+	# flocking 
 	var flock_vec = flocking(state.step)
-#	print(flock_vec)
 	vec += flock_vec
 	
-	# get global transforms
-#	var f_pos = []
-#	for f in flockers:
-#		 f_pos.append(f.global_position)
-#	var f_vel = []
-#	for f in flockers:
-#		f_vel.append(f.linear_velcity)
-	
-	
-	
-	vec *= acceleration
-	
+	# add to linear velocity
 	state.linear_velocity += vec
 	
+#	var ang = get_angle_to(player.global_position)
+#	state.linear_velocity = state.linear_velocity.rotated(state.step)
+	
+	
+	# speed
+#	state.linear_velocity = state.linear_velocity.normalized() * speed
+	
+	# look at player
 	var look_vec = Vector2.ZERO
 	look_vec += state.linear_velocity.normalized()
 	look_vec += (player.global_position - global_position).normalized()
 	look_vec = look_vec.normalized()
 	$Body.look_at(global_position + look_vec)
 	
+	
+	
+	state.transform.origin = Vector2(wrapf(state.transform.origin.x, -256, 256), wrapf(state.transform.origin.y, -256, 256))
+#	print(global_position)
 
-#var flocking_vec = Vector2.ZERO
 
 var flockers = []
 
@@ -250,18 +293,18 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 				$AnimationPlayer.play("attack")
 
 
-func injure(o: Node2D):
+func injure(victim: Node2D):
 	var cast_projectile = CastProjectile.new()
 	cast_projectile.damage = melee_damage
 	cast_projectile.pos_step = Vector2.ZERO
 	cast_projectile.knockback = 4.0
 	var contact_point = $Body/AttackArea/CollisionShape2D.global_position
-	o.hit(cast_projectile, contact_point)
-	var fx_amt = lerp(0.3, 0.7, cast_projectile.damage / o.health_max)
+	victim.hit(cast_projectile, contact_point)
+	var fx_amt = lerp(0.3, 0.7, cast_projectile.damage / victim.health_max)
 	
 #	fx_amt = min(fx_amt, 1)
 #	print(melee_damage / o.health_max)
-	$"/root/World/YSort/Player/HalfMouse/Camera2D".raise_trauma(fx_amt)
+	camera_trauma.raise_trauma(fx_amt)
 	
 	cast_projectile.queue_free()
 
@@ -271,7 +314,6 @@ func _on_AttackArea_body_entered(body):
 	if body == player:
 		injure(player)
 		$AnimationPlayer.play("attack")
-	pass # Replace with function body.
 
 
 var sep_flockers = []

@@ -72,11 +72,6 @@ func pos_step():
 
 
 
-
-
-
-
-#func emit_projectile():
 func cast(charge_value: float):
 	var projectile = projectile_scene.instance()
 #	projectile.caster = self
@@ -104,5 +99,5 @@ func cast(charge_value: float):
 	
 	$CooldownTimer.start(cast_cooldown if cast_cooldown > 0 else 0.01)
 	
-	$CastSound.play()
+#	$CastSound.play()
 	

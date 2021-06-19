@@ -9,6 +9,7 @@ export var charge_speed = 1.0  # energy/second
 export var dash_len = 100
 export var dash_time = 0.25
 export var damping = 0.1
+export var reticle_manager_path: NodePath
 
 var pos_step = Vector2.ZERO
 var joypad_controls = false
@@ -21,7 +22,7 @@ onready var charge_value = 0
 onready var energy_value = energy_max
 onready var health_value = health_max
 
-onready var reticle_manager = $"/root/World/ReticleManager"
+onready var reticle_manager = get_node(reticle_manager_path)
 
 
 
@@ -67,6 +68,9 @@ func _process(delta):
 
 func _physics_process(delta):
 	
+	process_cast_state(delta)
+	
+	
 	if dashing:
 		return
 	
@@ -97,37 +101,18 @@ func _physics_process(delta):
 		
 #		dash_len = input_step.normalized()
 	
-#	input_step *= speed * delta
-	input_step *= speed
-	
 	pos_step = input_step
+	
+	pos_step *= speed
 #	if pos_step.length() > input_step.length():
 #		pos_step *= (1 - damping * delta)
 	
 	var disp = move_and_slide(pos_step)
 	if disp.length() < pos_step.length():
 		move_and_slide(pos_step.normalized() * (pos_step.length() - disp.length()))
-	
-	process_cast_state(delta)
-
-
-func _integrate_forces(state):
-#	state.linear_velocity = Vector2.ZERO
-#	var vel_len = state.linear_velocity.length()
-	
-#	if (state.linear_velocity + pos_step) <= state.linear_velocity:
-#		state.linear_velocity += pos_step
-		
-#	if state.linear_velocity.length() < pos_step.length():
-		
-#	state.linear_velocity = pos_step
-#	state.linear_velocity += pos_step
-	
-	pass
-
+	global_position = Vector2(wrapf(global_position.x, -256, 256), wrapf(global_position.y, -256, 256))
 	
 	
-
 
 
 
@@ -230,7 +215,7 @@ func release():
 	current_cast().call_deferred("cast", charge_value)
 	charge_value = 0
 	$Body/ChargeFx.release()
-	$HalfMouse/Camera2D.raise_trauma(0.1)
+#	$HalfMouse/Camera2D/Trauma.raise_trauma(0.2)
 	
 	
 #	current_cast().get_node("CooldownTimer").start(current_cast().cast_cooldown if current_cast().cast_cooldown > 0 else 0.01)
@@ -238,20 +223,11 @@ func release():
 
 func hit(cast:CastProjectile, contact_point:Vector2):
 	health_value -= cast.damage
-#	print(health_value)
 	
 	var impulse_vec:Vector2 = cast.pos_step + (cast.pos_step.normalized() * cast.knockback)
 	var impulse_pos = to_local(contact_point).rotated(rotation)
 #	apply_impulse(impulse_pos, impulse_vec)
 	
-	
-#	$UI/Health.min_value = 0
-#	$UI/Health.max_value = health_max
-#	$UI/Health.value = health
-#	$UI/Health/HideTimer.unhide()
-#	$AnimationPlayer.seek(0)
-#	$AnimationPlayer.play("hit", -1, 5.0)
-#	$"/root/World/Player/HalfMouse/Camera2D".raise_trauma(0.2)
 
 
 func _input(event):
@@ -272,3 +248,8 @@ func energy_value_post_charge():
 
 func _on_DashTimer_timeout():
 	$CollisionShape2D.set_deferred("disabled", false)
+
+
+func collect(pickup: Node):
+	# todo
+	print(str(pickup.name))

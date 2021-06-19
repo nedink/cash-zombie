@@ -4,9 +4,7 @@ extends Area2D
 class_name CastProjectile
 
 
-var explosion_scene = preload("res://cast/ExplosionFX.tscn")
-
-#var caster: OrbCast
+export var explosion_scene: PackedScene
 
 var vel:Vector2 = Vector2.ZERO
 var vel_step:Vector2 = Vector2.ZERO
@@ -17,9 +15,7 @@ var mass = 0.0
 var knockback = 0.0
 var size = 1.0
 var life_time = 1.0
-
 var collided_once = false
-
 var dead = false
 
 onready var shape:CircleShape2D = $CollisionShape2D.shape
@@ -38,7 +34,7 @@ func _process(delta):
 	if not dead:
 		scale = Vector2.ONE * size
 		$FX.scale.x = max(1, vel_step.length() / 8)
-		$FX.scale.y = min(1, 1/$FX.scale.x)
+#		$FX.scale.y = clamp(1/$FX.scale.x, 0, 1)
 #		var modul = rand_range(0, 0.3)
 #		$FX.modulate.r = 1 + modul
 #		$FX.modulate.g = 1 + modul
@@ -46,17 +42,19 @@ func _process(delta):
 		
 
 
+var collision_point = Vector2.ZERO
+
 func _physics_process(delta):
 	
 	position += pos_step
 	
-	vel *= (1 - damping * delta)
+	vel *= 1 - damping * delta
 	
 	vel_step = vel * delta
 	
-	var collision_point = do_collision($LeftEdge)
-	if not collision_point:
-		collision_point = do_collision($RightEdge)
+	
+	if not do_collision($LeftEdge):
+		do_collision($RightEdge)
 	
 	pos_step = vel_step.rotated(rotation)
 	
@@ -72,7 +70,7 @@ func do_collision(raycast:RayCast2D) -> Vector2:
 		collided_once = true
 		var collider = raycast.get_collider()
 		var my_position = global_position + (raycast.get_collision_point() - raycast.global_position)
-		on_hit(collider)
+		on_hit(collider, my_position)
 		return my_position
 	return Vector2.ZERO
 
@@ -110,27 +108,28 @@ func _on_Cast_body_shape_entered(body_id: int, body: PhysicsBody2D, body_shape: 
 #	if collision_points:
 #		hit_point = collision_points[0]
 	
-	on_hit(body)
+	on_hit(body, global_position)
 	
 	
 
 
-func on_hit(body):
+func on_hit(body, point: Vector2):
 #	$FX.hide()
 #	update()
 	if body.has_method("hit"):
-		call_deferred("explode")
+		call_deferred("explode", point)
 		
-		body.hit(self, global_position)
+		body.hit(self, point)
 		
 		queue_free()
 
 
 
-func explode():
+func explode(point: Vector2):
 	var explosion:Node2D = explosion_scene.instance()
 	$"/root/World".add_child(explosion)
-	explosion.global_transform = global_transform
+#	explosion.global_transform = global_transform
+	explosion.global_position = point
 #	explosion.global_position = global_position
 	explosion.scale = scale
 	pass
@@ -139,12 +138,8 @@ func explode():
 func destroy():
 	dead = true
 	set_process(false)
-	$AnimationPlayer.play("die")
-
-
-
-
-func _on_AnimationPlayer_animation_finished(anim_name):
-	if anim_name == "die":
-		queue_free()
+	$DeathTween.interpolate_property($FX, "scale", $FX.scale, Vector2.ZERO, 0.2)
+	$DeathTween.start()
+	yield($DeathTween, "tween_completed")
+	queue_free()
 

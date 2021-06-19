@@ -25,7 +25,9 @@ void fragment() {
 	vig = 1.0 - vig;
 
 	// mix chroma with original image by the gradient (more on corners, less in center)
-//	chroma = mix(og_color, chroma, vig * 2.);
+	vec3 chroma_vig = mix(og_color, chroma, vig * 2.);
+	
+	
 	
 	// mix chroma with vignette (darker version of chroma image)
 	COLOR = vec4(mix(chroma, chroma * vec3(light), vig), 1f);
