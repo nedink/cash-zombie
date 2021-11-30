@@ -14,9 +14,14 @@ func on_shake(amount):
 		max_offset.x * amount * rand_range(-1, 1),
 		max_offset.y * amount * rand_range(-1, 1)
 	)
-	offset = pos
 	
 	var sh : ShaderMaterial = chrome_vig.material
 #	sh.set_shader_param("light", min(pos.length() * 0.1, 0.7))
 #	sh.set_shader_param("extend", 0.5 + offset.length() * 0.1)
 	sh.set_shader_param("offset", pos * 2)
+
+
+
+func tween_zoom_to(dest):
+	$Tween.interpolate_property(self, "zoom", zoom, Vector2.ONE * dest, 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	$Tween.start()

@@ -18,7 +18,7 @@ onready var camera_trauma = $"/root/World/YSort/Player/HalfMouse/Camera2D/Trauma
 export var can_flock = false
 
 
-
+# BEHAVIOR 
 enum {
 	IDLE,
 	AGRO,
@@ -96,6 +96,8 @@ func _physics_process(delta):
 #		$AnimationPlayer.play("attack")
 #		injure(player)
 		
+
+# name for game - SCREW LOOSE
 
 
 func hit(cast:CastProjectile, contact_point:Vector2):
@@ -240,7 +242,6 @@ func _integrate_forces(state):
 	var noise_value = noise.get_noise_1d(noise_step)
 	vec += prev_direction.rotated(noise_value * PI) 
 	noise_step += state.step
-#	if $RayCast2D.has_method(cast_to)
 	$RayCast2D.cast_to = vec * 100
 	$RayCast2D.global_rotation = 0
 	
@@ -273,8 +274,8 @@ func _integrate_forces(state):
 	$Body.look_at(global_position + look_vec)
 	
 	
-	
-	state.transform.origin = Vector2(wrapf(state.transform.origin.x, -256, 256), wrapf(state.transform.origin.y, -256, 256))
+	# wrap around
+#	state.transform.origin = Vector2(wrapf(state.transform.origin.x, -256, 256), wrapf(state.transform.origin.y, -256, 256))
 #	print(global_position)
 
 
@@ -292,7 +293,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 				injure(target)
 				$AnimationPlayer.play("attack")
 
-
+# attack player
 func injure(victim: Node2D):
 	var cast_projectile = CastProjectile.new()
 	cast_projectile.damage = melee_damage
