@@ -49,12 +49,9 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 2, 2, 2, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[node name="Zombie" type="RigidBody2D" groups=[
-"enemy",
-"zombie",
-]]
+[node name="Zombie" type="RigidBody2D" groups=["enemy", "zombie"]]
 collision_layer = 2
-collision_mask = 3
+collision_mask = 7
 can_sleep = false
 linear_damp = 4.0
 script = ExtResource( 2 )
@@ -66,9 +63,9 @@ splat_scene = ExtResource( 13 )
 [node name="RayCast2D" type="RayCast2D" parent="."]
 
 [node name="Separation" type="Area2D" parent="."]
-monitorable = false
 collision_layer = 0
 collision_mask = 2
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Separation"]
 shape = SubResource( 1 )
@@ -84,18 +81,18 @@ __meta__ = {
 
 [node name="Cohesion" type="Area2D" parent="."]
 visible = false
-monitorable = false
 collision_layer = 0
 collision_mask = 2
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Cohesion"]
 shape = SubResource( 2 )
 
 [node name="Alignment" type="Area2D" parent="."]
 visible = false
-monitorable = false
 collision_layer = 0
 collision_mask = 2
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Alignment"]
 shape = SubResource( 3 )
@@ -120,10 +117,9 @@ width = 4.0
 default_color = Color( 1, 1, 1, 1 )
 
 [node name="Area2D" type="Area2D" parent="Body/Arms"]
-monitoring = false
-monitorable = false
-collision_layer = 2
+collision_layer = 0
 collision_mask = 0
+monitoring = false
 script = ExtResource( 1 )
 
 [node name="Left" type="CollisionShape2D" parent="Body/Arms/Area2D"]

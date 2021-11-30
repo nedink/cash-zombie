@@ -24,6 +24,12 @@ func _input(event):
 		get_tree().quit()
 	if event.is_action_pressed("secondary_cast"):
 		get_tree().paused = !get_tree().paused
+	if event.is_action_pressed("scroll_up"):
+		$Events.emit_signal("zoom", .9)
+		print("zoom in")
+	if event.is_action_pressed("scroll_down"):
+		$Events.emit_signal("zoom", 1.1)
+		print("zoom out")
 	
 
 

@@ -18,7 +18,7 @@ onready var camera_trauma = $"/root/World/YSort/Player/HalfMouse/Camera2D/Trauma
 export var can_flock = false
 
 
-
+# BEHAVIOR 
 enum {
 	IDLE,
 	AGRO,
@@ -99,6 +99,7 @@ func _physics_process(delta):
 
 
 func hit(cast:CastProjectile, contact_point:Vector2):
+	print("Zombie hit()")
 	health_value -= cast.damage
 	
 	var impulse_vec:Vector2 = (cast.mass * cast.vel.length() * Vector2.RIGHT.rotated(cast.rotation)) + Vector2.RIGHT.rotated(cast.rotation) * cast.knockback
@@ -292,7 +293,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 				injure(target)
 				$AnimationPlayer.play("attack")
 
-
+# attack player
 func injure(victim: Node2D):
 	var cast_projectile = CastProjectile.new()
 	cast_projectile.damage = melee_damage

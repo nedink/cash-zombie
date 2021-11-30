@@ -67,6 +67,7 @@ func do_collision(raycast:RayCast2D) -> Vector2:
 	raycast.enabled = vel_step.length() >= 16
 	raycast.cast_to.x = vel_step.length()
 	if raycast.is_colliding():
+		print("OrbProjectile do_collision")
 		collided_once = true
 		var collider = raycast.get_collider()
 		var my_position = global_position + (raycast.get_collision_point() - raycast.global_position)
@@ -82,7 +83,9 @@ func _on_VisibilityNotifier2D_screen_exited():
 	queue_free()
 
 
-func _on_Cast_body_shape_entered(body_id: int, body: PhysicsBody2D, body_shape: int, local_shape: int):
+func _on_OrbProjectile_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
+	print("_on_Cast_body_shape_entered")
+	
 	if collided_once:
 		return
 	
@@ -114,6 +117,7 @@ func _on_Cast_body_shape_entered(body_id: int, body: PhysicsBody2D, body_shape: 
 
 
 func on_hit(body, point: Vector2):
+	print("OrbProjectile on_hit " + body.name)
 #	$FX.hide()
 #	update()
 	if body.has_method("hit"):
@@ -142,4 +146,5 @@ func destroy():
 	$DeathTween.start()
 	yield($DeathTween, "tween_completed")
 	queue_free()
+
 
