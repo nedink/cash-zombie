@@ -124,9 +124,7 @@ tracks/3/keys = {
 [sub_resource type="Animation" id=4]
 resource_name = "walk_left"
 
-[node name="Player" type="KinematicBody2D" groups=[
-"player",
-]]
+[node name="Player" type="KinematicBody2D" groups=["player"]]
 collision_mask = 2050
 script = ExtResource( 1 )
 speed = 250

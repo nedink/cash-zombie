@@ -27,7 +27,6 @@ func _physics_process(delta):
 #	pass
 
 func hit(cast:CastProjectile, contact_point:Vector2):
-#	print("hit!")
 	health -= cast.damage
 #	impulses.append([
 #		to_local(contact_point),

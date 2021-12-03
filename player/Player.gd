@@ -110,7 +110,9 @@ func _physics_process(delta):
 	var disp = move_and_slide(pos_step)
 	if disp.length() < pos_step.length():
 		move_and_slide(pos_step.normalized() * (pos_step.length() - disp.length()))
-	global_position = Vector2(wrapf(global_position.x, -256, 256), wrapf(global_position.y, -256, 256))
+	
+	# WRAP
+#	global_position = Vector2(wrapf(global_position.x, -256, 256), wrapf(global_position.y, -256, 256))
 	
 	
 

@@ -22,9 +22,10 @@ radius = 8.0
 
 [node name="OrbProjectile" type="Area2D"]
 pause_mode = 1
+collision_mask = 36
 input_pickable = false
+monitoring = false
 monitorable = false
-collision_mask = 0
 script = ExtResource( 3 )
 explosion_scene = ExtResource( 1 )
 
@@ -102,15 +103,17 @@ shape = SubResource( 4 )
 position = Vector2( 0, -8 )
 enabled = true
 cast_to = Vector2( 16, 0 )
+collision_mask = 36
 collide_with_areas = true
 
 [node name="RightEdge" type="RayCast2D" parent="."]
 position = Vector2( 0, 8 )
 enabled = true
 cast_to = Vector2( 16, 0 )
+collision_mask = 36
 collide_with_areas = true
 
 [node name="DeathTween" type="Tween" parent="."]
 
-[connection signal="body_shape_entered" from="." to="." method="_on_Cast_body_shape_entered"]
+[connection signal="body_shape_entered" from="." to="." method="_on_OrbProjectile_body_shape_entered"]
 [connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
