@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://enemy/zombie/Arms.gd" type="Script" id=1]
 [ext_resource path="res://enemy/zombie/Zombie.gd" type="Script" id=2]
@@ -13,6 +13,10 @@
 [ext_resource path="res://assets/audio/bone_crunch/bone-snap-1.wav" type="AudioStream" id=11]
 [ext_resource path="res://ui/value_bar/ValueBar.tscn" type="PackedScene" id=12]
 [ext_resource path="res://enemy/zombie/Splat.tscn" type="PackedScene" id=13]
+[ext_resource path="res://enemy/zombie/AttackHitBox.gd" type="Script" id=14]
+
+[sub_resource type="CircleShape2D" id=9]
+radius = 16.0
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 37.1214
@@ -61,6 +65,14 @@ cohesion = 10.0
 splat_scene = ExtResource( 13 )
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
+
+[node name="AttackHitBox" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 0
+script = ExtResource( 14 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitBox"]
+shape = SubResource( 9 )
 
 [node name="Separation" type="Area2D" parent="."]
 collision_layer = 0

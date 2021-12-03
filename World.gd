@@ -11,6 +11,9 @@ onready var player = get_tree().get_nodes_in_group("player")[0]
 
 
 func _ready():
+	
+	Events.connect("pause", self, "on_pause")
+	
 	for x in range(-4, 4):
 		for y in range(-4, 4):
 			$TileMap.set_cell(x, y, rand_range(0, 16))
@@ -23,13 +26,13 @@ func _input(event):
 	if event.is_action("ui_cancel"):
 		get_tree().quit()
 	if event.is_action_pressed("secondary_cast"):
-		get_tree().paused = !get_tree().paused
+		Events.emit_signal("pause")
+		
 	if event.is_action_pressed("scroll_up"):
-		$Events.emit_signal("zoom", .9)
-		print("zoom in")
+		Engine.time_scale += 0.1
 	if event.is_action_pressed("scroll_down"):
-		$Events.emit_signal("zoom", 1.1)
-		print("zoom out")
+		Engine.time_scale -= 0.1
+
 	
 
 
@@ -55,3 +58,7 @@ func slow_mo(time: float, in_time: float, out_time: float):
 	
 	
 
+
+
+func on_pause():
+	get_tree().paused = !get_tree().paused

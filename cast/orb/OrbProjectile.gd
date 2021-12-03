@@ -58,18 +58,19 @@ func _physics_process(delta):
 	
 	pos_step = vel_step.rotated(rotation)
 	
+	
 
 
-
+var collider
 func do_collision(raycast:RayCast2D) -> Vector2:
 	if collided_once:
 		return Vector2.ZERO
-	raycast.enabled = vel_step.length() >= 16
-	raycast.cast_to.x = vel_step.length()
+#	raycast.enabled = vel_step.length() >= 16
+	raycast.cast_to.x = max($CollisionShape2D.shape.radius * 2, vel_step.length())
 	if raycast.is_colliding():
-		print("OrbProjectile do_collision")
-		collided_once = true
-		var collider = raycast.get_collider()
+		
+#		collided_once = true
+		collider = raycast.get_collider()
 		var my_position = global_position + (raycast.get_collision_point() - raycast.global_position)
 		on_hit(collider, my_position)
 		return my_position
@@ -84,7 +85,6 @@ func _on_VisibilityNotifier2D_screen_exited():
 
 
 func _on_OrbProjectile_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
-	print("_on_Cast_body_shape_entered")
 	
 	if collided_once:
 		return
@@ -117,7 +117,7 @@ func _on_OrbProjectile_body_shape_entered(body_rid, body, body_shape_index, loca
 
 
 func on_hit(body, point: Vector2):
-	print("OrbProjectile on_hit " + body.name)
+#	print("OrbProjectile on_hit " + body.name)
 #	$FX.hide()
 #	update()
 	if body.has_method("hit"):

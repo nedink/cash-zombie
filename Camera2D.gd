@@ -20,5 +20,8 @@ func on_shake(amount):
 #	sh.set_shader_param("extend", 0.5 + offset.length() * 0.1)
 	sh.set_shader_param("offset", pos * 2)
 
-func _on_Events_zoom(amt):
-	zoom *= amt
+
+
+func tween_zoom_to(dest):
+	$Tween.interpolate_property(self, "zoom", zoom, Vector2.ONE * dest, 1, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	$Tween.start()
