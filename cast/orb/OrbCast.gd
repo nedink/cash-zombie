@@ -42,7 +42,7 @@ var charge_value = 0
 
 
 
-var projectile_scene:PackedScene = load("res://cast/orb/OrbProjectile.tscn")
+export var projectile_scene:PackedScene
 
 # Caster/Slots/Primary/@
 onready var caster = get_parent().get_parent().get_parent()

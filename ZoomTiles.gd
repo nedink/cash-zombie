@@ -9,7 +9,6 @@ onready var camera = node_finder.camera
 
 func _on_ZoomArea_body_shape_entered(body_rid, body, body_shape_index, local_shape_index):
 	if body.is_in_group("player"):
-#		camera.zoom *= 1
 		
 		var body_shape_owner_id = body.shape_find_owner(body_shape_index)
 		var body_shape_owner = body.shape_owner_get_owner(body_shape_owner_id)
@@ -21,9 +20,7 @@ func _on_ZoomArea_body_shape_entered(body_rid, body, body_shape_index, local_sha
 		var area_shape_2d = shape_owner_get_shape(area_shape_owner_id, 0)
 		var area_global_transform = area_shape_owner.global_transform
 		
-#		print("change")
-		camera.tween_zoom_to(Vector2.ONE * (1 + area_shape_owner.get_index()))
-#		camera.zoom = 
+		camera.tween_zoom_to(Vector2.ONE * (1 + area_shape_owner.get_index() / 2.0))
 #
 #	var collision_points = area_shape_2d.collide_and_get_contacts(area_global_transform,
 #									body_shape_2d,

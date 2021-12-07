@@ -1,11 +1,13 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/energy_shot2.wav" type="AudioStream" id=1]
 [ext_resource path="res://cast/orb/OrbCast.gd" type="Script" id=2]
 [ext_resource path="res://cast/ChargeFx.tscn" type="PackedScene" id=3]
+[ext_resource path="res://cast/orb/OrbProjectile.tscn" type="PackedScene" id=4]
 
 [node name="OrbCast" type="Node2D"]
 script = ExtResource( 2 )
+projectile_scene = ExtResource( 4 )
 
 [node name="CooldownTimer" type="Timer" parent="."]
 one_shot = true

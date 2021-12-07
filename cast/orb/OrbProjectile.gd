@@ -52,9 +52,11 @@ func _physics_process(delta):
 	
 	vel_step = vel * delta
 	
+	var edge_collision = do_collision($LeftEdge)
+	if not edge_collision:
+		edge_collision = do_collision($RightEdge)
 	
-	if not do_collision($LeftEdge):
-		do_collision($RightEdge)
+
 	
 	pos_step = vel_step.rotated(rotation)
 	
@@ -63,16 +65,21 @@ func _physics_process(delta):
 
 var collider
 func do_collision(raycast:RayCast2D) -> Vector2:
-	if collided_once:
-		return Vector2.ZERO
+#	if collided_once:
+#		return Vector2.ZERO
 #	raycast.enabled = vel_step.length() >= 16
 	raycast.cast_to.x = max($CollisionShape2D.shape.radius * 2, vel_step.length())
 	if raycast.is_colliding():
 		collided_once = true
 		collider = raycast.get_collider()
-		var my_position = global_position + (raycast.get_collision_point() - raycast.global_position)
-		on_hit(collider, my_position)
-		return my_position
+		var hit_position = global_position + (raycast.get_collision_point() - raycast.global_position)
+		on_hit(collider, hit_position)
+		
+		var normal = raycast.get_collision_normal()
+		rotation = Vector2.RIGHT.rotated(rotation).reflect(normal).angle() + PI
+		
+		
+		return hit_position
 	return Vector2.ZERO
 
 
@@ -124,7 +131,10 @@ func on_hit(body, point: Vector2):
 		
 		body.hit(self, point)
 		
-		queue_free()
+		
+#		queue_free()
+	
+#	if body.has_method("bounce")
 
 
 
