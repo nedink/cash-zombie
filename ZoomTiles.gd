@@ -22,7 +22,7 @@ func _on_ZoomArea_body_shape_entered(body_rid, body, body_shape_index, local_sha
 		var area_global_transform = area_shape_owner.global_transform
 		
 #		print("change")
-		camera.tween_zoom_to(Vector2.ONE * 0.5 * (1 + area_shape_owner.get_index()))
+		camera.tween_zoom_to(Vector2.ONE * (1 + area_shape_owner.get_index()))
 #		camera.zoom = 
 #
 #	var collision_points = area_shape_2d.collide_and_get_contacts(area_global_transform,

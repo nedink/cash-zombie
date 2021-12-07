@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://enemy/zombie/Arms.gd" type="Script" id=1]
 [ext_resource path="res://enemy/zombie/Zombie.gd" type="Script" id=2]
@@ -15,26 +15,17 @@
 [ext_resource path="res://enemy/zombie/Splat.tscn" type="PackedScene" id=13]
 [ext_resource path="res://enemy/zombie/AttackHitBox.gd" type="Script" id=14]
 
+[sub_resource type="CircleShape2D" id=10]
+radius = 10.0499
+
 [sub_resource type="CircleShape2D" id=9]
 radius = 16.0
-
-[sub_resource type="CircleShape2D" id=1]
-radius = 37.1214
-
-[sub_resource type="CircleShape2D" id=2]
-radius = 119.017
-
-[sub_resource type="CircleShape2D" id=3]
-radius = 64.0
 
 [sub_resource type="CircleShape2D" id=4]
 radius = 6.0
 
 [sub_resource type="CircleShape2D" id=5]
 radius = 7.0
-
-[sub_resource type="CircleShape2D" id=6]
-radius = 10.0499
 
 [sub_resource type="Animation" id=7]
 length = 0.5
@@ -64,50 +55,27 @@ separation = 100.0
 cohesion = 10.0
 splat_scene = ExtResource( 13 )
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 10 )
+
 [node name="RayCast2D" type="RayCast2D" parent="."]
 
-[node name="AttackHitBox" type="Area2D" parent="."]
+[node name="HitBoxArea" type="Area2D" parent="."]
 collision_layer = 32
 collision_mask = 0
+monitorable = false
 script = ExtResource( 14 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxArea"]
 shape = SubResource( 9 )
 
-[node name="Separation" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 2
-monitorable = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Separation"]
-shape = SubResource( 1 )
-
-[node name="Label" type="Label" parent="Separation"]
-margin_left = -19.0
-margin_top = -32.0
-margin_right = 21.0
-margin_bottom = -18.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Cohesion" type="Area2D" parent="."]
+[node name="DetectPlayerArea" type="Area2D" parent="."]
 visible = false
 collision_layer = 0
-collision_mask = 2
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Cohesion"]
-shape = SubResource( 2 )
-
-[node name="Alignment" type="Area2D" parent="."]
-visible = false
-collision_layer = 0
-collision_mask = 2
-monitorable = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Alignment"]
-shape = SubResource( 3 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DetectPlayerArea"]
+polygon = PoolVector2Array( 0, 0, 120, -232, 216, -168, 272, -64, 272, 64, 216, 168, 120, 232 )
 
 [node name="Body" type="Node2D" parent="."]
 modulate = Color( 1.3, 1.2, 1.3, 1 )
@@ -155,9 +123,6 @@ collision_layer = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Body/AttackArea"]
 position = Vector2( 2, 0 )
 shape = SubResource( 5 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 6 )
 
 [node name="States" type="Node" parent="."]
 
@@ -243,11 +208,6 @@ samples = [ ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ) ]
 random_strategy = 1
 random_pitch_range = 1.0
 
-[connection signal="body_entered" from="Separation" to="." method="_on_Separation_body_entered"]
-[connection signal="body_exited" from="Separation" to="." method="_on_Separation_body_exited"]
-[connection signal="body_entered" from="Cohesion" to="." method="_on_Cohesion_body_entered"]
-[connection signal="body_exited" from="Cohesion" to="." method="_on_Cohesion_body_exited"]
-[connection signal="body_entered" from="Alignment" to="." method="_on_Alignment_body_entered"]
-[connection signal="body_exited" from="Alignment" to="." method="_on_Alignment_body_exited"]
+[connection signal="body_entered" from="DetectPlayerArea" to="." method="_on_DetectPlayerArea_body_entered"]
 [connection signal="body_entered" from="Body/AttackArea" to="." method="_on_AttackArea_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

@@ -46,16 +46,16 @@ func pid(current_error: Vector2, dt: float) -> Vector2:
 
 export var splat_scene: PackedScene
 
-onready var health_max = 10 * size
+onready var health_max = 10 * size * size
 onready var health_value = health_max
 onready var player = $"/root/World/YSort/Player"
 
 
 func _ready():
-#	$CollisionShape2D = $CollisionShape2D.duplicate()
+	var shape = $CollisionShape2D.shape.duplicate()
+	$CollisionShape2D.shape = shape
 	$CollisionShape2D.shape.radius *= size
 	$Body.scale *= size
-	$Separation.monitoring = can_flock
 #	$Cohesion.monitoring = can_flock
 #	$Alignment.monitoring = can_flock
 
@@ -189,7 +189,7 @@ func flocking(delta):
 #	sep_vec = sep_vec.normalized()
 	# coef applied
 	sep_vec *= separation
-	flock_vec += sep_vec
+#	flock_vec += sep_vec
 	
 	# cohesion - displacements, summed, averaged, normalized
 	var coh_vec = Vector2.ZERO
@@ -344,3 +344,8 @@ func _on_Alignment_body_entered(body):
 
 func _on_Alignment_body_exited(body):
 	ali_flockers.remove(ali_flockers.find(body))
+
+
+
+func _on_DetectPlayerArea_body_entered(body):
+	state = AGRO

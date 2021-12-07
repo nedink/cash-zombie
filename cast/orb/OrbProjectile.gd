@@ -68,8 +68,7 @@ func do_collision(raycast:RayCast2D) -> Vector2:
 #	raycast.enabled = vel_step.length() >= 16
 	raycast.cast_to.x = max($CollisionShape2D.shape.radius * 2, vel_step.length())
 	if raycast.is_colliding():
-		
-#		collided_once = true
+		collided_once = true
 		collider = raycast.get_collider()
 		var my_position = global_position + (raycast.get_collision_point() - raycast.global_position)
 		on_hit(collider, my_position)

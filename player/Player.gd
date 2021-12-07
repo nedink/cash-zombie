@@ -88,6 +88,7 @@ func _physics_process(delta):
 	
 	input_step = input_step.normalized()
 	
+	# dash
 	if Input.is_action_just_pressed("dash") and $DashTimer.is_stopped():
 		dashing = true
 		$CollisionShape2D.set_deferred("disabled", true)
@@ -95,8 +96,18 @@ func _physics_process(delta):
 		if input_step.normalized().length():
 			direction = input_step.normalized()
 		dash_direction = direction
-		$DashTween.interpolate_property(self, "position", position, position + (dash_len * direction), dash_time, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+		var dash_displacement = direction * dash_len
+		
+		# detect wall
+		var space_state = get_world_2d().direct_space_state
+		var result = space_state.intersect_ray(global_position, global_position + dash_displacement, [], collision_mask, true, true)
+#		if result:
+#			dash_displacement = result.position - global_position
+		
+		# execute dash
+		$DashTween.interpolate_property(self, "position", position, position + dash_displacement, dash_time, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 		$DashTween.start()
+		
 		$DashTimer.start()
 		
 #		dash_len = input_step.normalized()
